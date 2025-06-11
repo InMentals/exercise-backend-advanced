@@ -405,5 +405,5 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
-# Uploads
-uploads
+# Images
+public/productImages
