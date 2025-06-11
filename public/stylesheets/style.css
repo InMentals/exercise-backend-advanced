@@ -1,0 +1,42 @@
+main {
+  padding: 50px;
+  ul {
+    padding: 0;
+  }
+  
+  ul li {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    list-style: none; 
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); 
+    img {
+      margin-bottom: 16px;
+    }
+  } 
+}
+
+h1{
+  padding-bottom: 20px;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.trashIcon {
+  margin-top: 10px; 
+  text-align: right; 
+}
+
+i.bi-trash3 {
+  font-size: 20px; 
+  color: red; 
+  cursor: pointer; 
+}
+
+header {
+  position: sticky;
+  top: 0;
+}
