@@ -6,12 +6,12 @@ export function index(req, res, next) {
 
 export async function postNew(req, res, next) {
   try {
-    const { name, price, image } = req.body;
+    const { name, price } = req.body;
     const userId = req.session.userId;
     const product = new Product({
       name,
       price,
-      image: req.file.filename,
+      image: req.file ? req.file.filename : "",
       owner: userId,
     });
     if (req.body.work === "") product.tags = [...product.tags, "work"];

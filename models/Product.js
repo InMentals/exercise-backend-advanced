@@ -1,13 +1,21 @@
 import mongoose from "mongoose";
 
 var productSchema = new mongoose.Schema({
-    name: String,
-    owner: { ref: 'User', type: mongoose.Schema.Types.ObjectId, index: true},
-    price: Number,
-    image: String,
-    tags: [String]
+  name: { type: String, index: true },
+  owner: { ref: "User", type: mongoose.Schema.Types.ObjectId, index: true },
+  price: { type: Number, index: true },
+  image: String,
+  tags: [String],
 });
 
-const Product =  mongoose.model('Product', productSchema);
+productSchema.statics.list = function (filter, limit, skip, sort) {
+  const query = Product.find(filter);
+  query.limit(limit);
+  query.skip(skip);
+  query.sort(sort);
+  return query.exec();
+};
+
+const Product = mongoose.model("Product", productSchema);
 
 export default Product;
