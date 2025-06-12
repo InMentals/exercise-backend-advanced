@@ -9,6 +9,7 @@ import * as loginController from "./controllers/loginController.js";
 import * as sessionManager from "./lib/sessionManager.js";
 import * as productsController from "./controllers/productsController.js";
 import upload from "./lib/uploadConfigure.js";
+import i18n from "./lib/i18nConfigure.js";
 
 await connectMongoose();
 console.log("Connected to MongoDB.");
@@ -31,6 +32,7 @@ app.use(express.static(path.join(import.meta.dirname, "public")));
 //  application routes
 app.use(sessionManager.middleware);
 app.use(sessionManager.useSessionInViews);
+app.use(i18n.init);
 app.get("/", homeController.index);
 app.get("/login", loginController.index);
 app.post("/login", loginController.postLogin);
