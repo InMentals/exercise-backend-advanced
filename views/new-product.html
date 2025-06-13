@@ -1,10 +1,10 @@
 <%- include('header.html') %>
 
-<h1>New Product</h1>
+<h1><%=__("New Product")%></h1>
 
 <form method="POST" enctype="multipart/form-data">
   <div class="mb-3">
-    <label for="exampleInputEmail1" class="form-label">Name</label>
+    <label for="exampleInputEmail1" class="form-label"><%=__("Name")%></label>
     <input
       type="text"
       name="name"
@@ -16,18 +16,20 @@
   </div>
 
   <div class="mb-3">
-    <label for="exampleInputPassword1" class="form-label">Price</label>
+    <label for="exampleInputPrice" class="form-label"><%=__("Price")%></label>
     <input
       type="number"
       name="price"
       class="form-control"
-      id="exampleInputPassword1"
+      id="exampleInputPrice"
       required
     />
   </div>
 
   <div class="mb-3">
-    <label for="exampleInputImageFile" class="form-label">Image</label>
+    <label for="exampleInputImageFile" class="form-label"
+      ><%=__("Image")%></label
+    >
     <input
       type="file"
       name="productImage"
@@ -37,7 +39,7 @@
   </div>
 
   <div class="mb-3">
-    <label class="frorm-label" for="tags">Tags </label>
+    <label class="frorm-label" for="tags"><%=__("Tags")%></label>
     <div class="form-check" id="tags">
       <input
         class="form-check-input"
@@ -80,7 +82,9 @@
     </div>
   </div>
 
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <button type="submit" class="btn btn-primary" id="createButton">
+    <%=__("Create new product")%>
+  </button>
 </form>
 
 <%- include('footer.html') %>

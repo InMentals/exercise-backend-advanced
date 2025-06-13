@@ -20,20 +20,20 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    <a class="nav-link active" aria-current="page" href="/"><%=__("Home")%></a>
                 </li>
                 
                 <% if (session.userId) { %>
                     <li class="nav-item">
-                        <a class="nav-link" href="/products/new">New product</a>
+                        <a class="nav-link" href="/products/new"><%=__("New product")%></a>
                     </li>
                 <% } %>
                 
                 </ul>
                 <% if(!session.userId) { %>
-                    <a class="btn btn-success" href="/login">Login</a>
+                    <a class="btn btn-success" href="/login"><%=__("Login")%></a>
                 <% } else {%>
-                    <a class="btn btn-outline-success" href="/logout">Logout</a
+                    <a class="btn btn-outline-success" href="/logout"><%=__("Logout")%></a
                 <% } %>
             </div>
             </div>

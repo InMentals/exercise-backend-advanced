@@ -1,19 +1,19 @@
 <%- include('header.html') %>
 
 <h1><%=__("Products")%></h1>
-<p><%=__("User ID: ")%><%= session.userId %></p>
+<p><%=__("User ID")%>: <%= session.userId %></p>
 
 <%if(!session.userId) {%>
-<p><a href="/login">Login</a> to access your products</p>
+<p><a href="/login"><%=__("Login")%></a><%=__(" to access your products")%></p>
 <% } else {%>
 <ul>
   <% products.forEach(product => { %>
   <li>
     <h3><%= product.name %></h3>
-    <p><strong><%=__("Price:")%></strong> <%= product.price %>€</p>
+    <p><strong><%=__("Price")%>:</strong> <%= product.price %>€</p>
     <img src="<%= product.image ? `/productImages/${product.image}` :
     "https://placehold.co/200" %>" height="200" alt="<%= product.name %>" />
-    <p><strong><%=__("Tags:")%></strong> <%= product.tags.join(", "); %></p>
+    <p><strong><%=__("Tags")%>:</strong> <%= product.tags.join(", "); %></p>
     <div class="trashIcon">
       <a href="/products/delete/<%= product._id %> ">
         <i class="bi bi-trash3"></i>

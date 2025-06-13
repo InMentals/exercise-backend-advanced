@@ -1,6 +1,18 @@
 {
-  "Price:": "Precio:",
+  "Price": "Precio",
   "Products": "Productos",
-  "Tags:": "Etiquetas:",
-  "User ID: ": "ID de Usuario: "
+  "Tags": "Etiquetas",
+  "User ID": "ID de Usuario",
+  "Home": "Inicio",
+  "New product": "Nuevo producto",
+  "Logout": "Cerrar sesión",
+  "Login": "Iniciar sesión",
+  " to access your products": " para acceder a tus productos",
+  "Email address": "Correo Electrónico",
+  "We'll never share your email with anyone else.": "Tu dirección de correo no será compartida con nadie.",
+  "Password": "Contraseña",
+  "New Product": "Nuevo Producto",
+  "Name": "Nombre",
+  "Image": "Imagen",
+  "Create new product": "Create new product"
 }
