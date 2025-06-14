@@ -49,6 +49,13 @@
                 </li>
                 <% } %>
               </ul>
+              <%# Lang selector %>
+              <div>
+                <% getLocales().forEach(locale => {%>
+                  <a href="/change-locale/<%= locale%>"><%= locale%></a>
+                <%})%>
+              </div>&nbsp;
+              
               <% if(!session.userId) { %>
               <a class="btn btn-success" href="/login"><%=__("Login")%></a>
               <% } else {%>

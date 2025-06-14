@@ -1,13 +1,15 @@
 import createError from "http-errors";
 import express from "express";
 import path from "path";
-import cookieParser from "cookie-parser";
 import logger from "morgan";
 import connectMongoose from "./lib/connectMongoose.js";
 import * as homeController from "./controllers/homeController.js";
 import * as loginController from "./controllers/loginController.js";
 import * as sessionManager from "./lib/sessionManager.js";
 import * as productsController from "./controllers/productsController.js";
+import * as localeController from "./controllers/localeController.js"
+import cookieParser from "cookie-parser";
+
 import upload from "./lib/uploadConfigure.js";
 import i18n from "./lib/i18nConfigure.js";
 
@@ -26,13 +28,14 @@ app.locals.appName = "NodePop";
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(import.meta.dirname, "public")));
 
 //  application routes
+app.use(cookieParser());
 app.use(sessionManager.middleware);
 app.use(sessionManager.useSessionInViews);
 app.use(i18n.init);
+app.get("/change-locale/:locale", localeController.changeLocale)
 app.get("/", homeController.index);
 app.get("/login", loginController.index);
 app.post("/login", loginController.postLogin);
