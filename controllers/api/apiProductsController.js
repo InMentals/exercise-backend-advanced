@@ -8,6 +8,7 @@ export async function list(req, res, next) {
     //Filters
     //http://localhost:3000/api/products?name=...
     const filterName = req.query.name;
+    //TODO implement price filter
 
     //Pagination
     //http://localhost:3000/api/products?limit=2&skip=2
@@ -22,6 +23,9 @@ export async function list(req, res, next) {
     //http://localhost:3000/api/products?fields=name%20-_id%20price
     const fields = req.query.fields;
 
+    //With total count
+    const withCount = req.query.count === "true";
+
     const filter = {
       //TODO implement API authentication
       //owner: userId,
@@ -30,7 +34,12 @@ export async function list(req, res, next) {
       filter.name = filterName;
     }
     const products = await Product.list(filter, limit, skip, sort, fields);
-    res.json({ results: products });
+    const result = { results: products };
+    if (withCount) {
+      const count = await Product.countDocuments(filter);
+      result.count = count;
+    }
+    res.json(result);
   } catch (error) {
     next(error);
   }
