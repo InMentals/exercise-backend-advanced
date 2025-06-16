@@ -33,6 +33,7 @@ export async function list(req, res, next) {
     if (filterName) {
       filter.name = filterName;
     }
+
     const products = await Product.list(filter, limit, skip, sort, fields);
     const result = { results: products };
     if (withCount) {
