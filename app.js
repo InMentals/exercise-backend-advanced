@@ -7,7 +7,8 @@ import * as homeController from "./controllers/homeController.js";
 import * as loginController from "./controllers/loginController.js";
 import * as sessionManager from "./lib/sessionManager.js";
 import * as productsController from "./controllers/productsController.js";
-import * as localeController from "./controllers/localeController.js"
+import * as localeController from "./controllers/localeController.js";
+import * as apiProductsController from "./controllers/api/apiProductsController.js";
 import cookieParser from "cookie-parser";
 
 import upload from "./lib/uploadConfigure.js";
@@ -30,12 +31,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(import.meta.dirname, "public")));
 
-//  application routes
+// API routes
+app.get("/api/products", apiProductsController.list);
+
+//  WebApplication routes
 app.use(cookieParser());
 app.use(sessionManager.middleware);
 app.use(sessionManager.useSessionInViews);
 app.use(i18n.init);
-app.get("/change-locale/:locale", localeController.changeLocale)
+app.get("/change-locale/:locale", localeController.changeLocale);
 app.get("/", homeController.index);
 app.get("/login", loginController.index);
 app.post("/login", loginController.postLogin);
