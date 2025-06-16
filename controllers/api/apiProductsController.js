@@ -45,3 +45,13 @@ export async function list(req, res, next) {
     next(error);
   }
 }
+
+export async function getOne(req, res, next) {
+  try {
+    const productId = req.params.productId;
+    const product = await Product.findById(productId);
+    res.json({ result: product });
+  } catch (error) {
+    next(error);
+  }
+}

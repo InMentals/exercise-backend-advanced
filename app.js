@@ -33,6 +33,7 @@ app.use(express.static(path.join(import.meta.dirname, "public")));
 
 // API routes
 app.get("/api/products", apiProductsController.list);
+app.get("/api/products/:productId", apiProductsController.getOne);
 
 //  WebApplication routes
 app.use(cookieParser());
