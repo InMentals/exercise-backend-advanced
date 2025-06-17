@@ -44,6 +44,7 @@ app.put(
   upload.single("image"),
   apiProductsController.update
 );
+app.delete("/api/products/:productId", apiProductsController.deleteProduct);
 
 //  WebApplication routes
 app.use(cookieParser());
