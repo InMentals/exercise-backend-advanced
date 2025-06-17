@@ -34,6 +34,11 @@ app.use(express.static(path.join(import.meta.dirname, "public")));
 // API routes
 app.get("/api/products", apiProductsController.list);
 app.get("/api/products/:productId", apiProductsController.getOne);
+app.post(
+  "/api/products",
+  upload.single("image"),
+  apiProductsController.newProduct
+);
 
 //  WebApplication routes
 app.use(cookieParser());
@@ -49,7 +54,7 @@ app.get("/products/new", sessionManager.guard, productsController.index);
 app.post(
   "/products/new",
   sessionManager.guard,
-  upload.single("productImage"),
+  upload.single("image"),
   productsController.postNew
 );
 app.get(

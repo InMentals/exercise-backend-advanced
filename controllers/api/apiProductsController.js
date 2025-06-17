@@ -55,3 +55,20 @@ export async function getOne(req, res, next) {
     next(error);
   }
 }
+
+export async function newProduct(req, res, next) {
+  try {
+    const productData = req.body;
+
+    // create product in memory
+    const product = new Product(productData);
+    product.image = req.file?.filename;
+
+    // save product
+    const savedProduct = await product.save();
+
+    res.status(201).json({ result: savedProduct });
+  } catch (error) {
+    next(error);
+  }
+}
