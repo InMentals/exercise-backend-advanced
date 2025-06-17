@@ -72,3 +72,19 @@ export async function newProduct(req, res, next) {
     next(error);
   }
 }
+
+export async function update(req, res, next) {
+  try {
+    const productId = req.params.productId;
+    const productData = req.body;
+    productData.image = req.file?.filename;
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      productData,
+      { new: true }
+    );
+    res.json({ result: updatedProduct });
+  } catch (error) {
+    next(error);
+  }
+}

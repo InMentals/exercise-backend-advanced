@@ -39,6 +39,11 @@ app.post(
   upload.single("image"),
   apiProductsController.newProduct
 );
+app.put(
+  "/api/products/:productId",
+  upload.single("image"),
+  apiProductsController.update
+);
 
 //  WebApplication routes
 app.use(cookieParser());
