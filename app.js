@@ -10,6 +10,7 @@ import * as productsController from "./controllers/productsController.js";
 import * as localeController from "./controllers/localeController.js";
 import * as apiProductsController from "./controllers/api/apiProductsController.js";
 import cookieParser from "cookie-parser";
+import swaggerMiddleware from "./lib/swaggerMiddleware.js";
 
 import upload from "./lib/uploadConfigure.js";
 import i18n from "./lib/i18nConfigure.js";
@@ -68,6 +69,7 @@ app.get(
   sessionManager.guard,
   productsController.deleteProduct
 );
+app.use("/api-doc", swaggerMiddleware);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
