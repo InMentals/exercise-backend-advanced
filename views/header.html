@@ -47,18 +47,22 @@
                     ><%=__("New product")%></a
                   >
                 </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/api-doc" target="_blank"
+                    ><%=__("API Doc")%></a
+                  >
+                </li>
                 <% } %>
               </ul>
               <%# Lang selector %>
               <div>
                 <% getLocales().forEach(locale => {%>
-                  <a href="/change-locale/<%= locale%>">
-                    <img src="/images/<%= locale%>.png" alt="<%= locale%>">
-                  </a>
+                <a href="/change-locale/<%= locale%>">
+                  <img src="/images/<%= locale%>.png" alt="<%= locale%>" />
+                </a>
                 <%})%>
-              </div>&nbsp;
-              
-              <% if(!session.userId) { %>
+              </div>
+              &nbsp; <% if(!session.userId) { %>
               <a class="btn btn-success" href="/login"><%=__("Login")%></a>
               <% } else {%>
               <a class="btn btn-outline-success" href="/logout">
