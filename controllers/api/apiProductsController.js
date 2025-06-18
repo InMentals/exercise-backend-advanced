@@ -1,11 +1,11 @@
 import path from "node:path";
 import Product from "../../models/Product.js";
 import { unlink } from "node:fs/promises";
+import createError from "http-errors";
 
 export async function list(req, res, next) {
   try {
-    //TODO implement API authentication
-    //const userId = req.session.userId;
+    const userId = req.apiUserId;
 
     //Filters
     //http://localhost:3000/api/products?name=...
@@ -29,8 +29,7 @@ export async function list(req, res, next) {
     const withCount = req.query.count === "true";
 
     const filter = {
-      //TODO implement API authentication
-      //owner: userId,
+      owner: userId,
     };
     if (filterName) {
       filter.name = filterName;
@@ -51,7 +50,8 @@ export async function list(req, res, next) {
 export async function getOne(req, res, next) {
   try {
     const productId = req.params.productId;
-    const product = await Product.findById(productId);
+    const userId = req.apiUserId;
+    const product = await Product.findOne({ _id: productId, owner: userId });
     res.json({ result: product });
   } catch (error) {
     next(error);
@@ -61,10 +61,12 @@ export async function getOne(req, res, next) {
 export async function newProduct(req, res, next) {
   try {
     const productData = req.body;
+    const userId = req.apiUserId;
 
     // create product in memory
     const product = new Product(productData);
     product.image = req.file?.filename;
+    product.owner = userId;
 
     // save product
     const savedProduct = await product.save();
@@ -78,12 +80,13 @@ export async function newProduct(req, res, next) {
 export async function update(req, res, next) {
   try {
     const productId = req.params.productId;
+    const userId = req.apiUserId;
     const productData = req.body;
     productData.image = req.file?.filename;
-    const updatedProduct = await Product.findByIdAndUpdate(
-      productId,
+    const updatedProduct = await Product.findOneAndUpdate(
+      { _id: productId, owner: userId },
       productData,
-      { new: true }
+      { new: true } // returns the updated document
     );
     res.json({ result: updatedProduct });
   } catch (error) {
@@ -94,19 +97,38 @@ export async function update(req, res, next) {
 export async function deleteProduct(req, res, next) {
   try {
     const productId = req.params.productId;
-    // remove image file if exists
+    const userId = req.apiUserId;
+
     const product = await Product.findById(productId);
-    if (product.image) {
-      await unlink(
-        path.join(
-          import.meta.dirname,
-          "..",
-          "..",
-          "public",
-          "productImages",
-          product.image
-        )
+
+    if (!product) {
+      console.log(
+        `WARNING! user${userId} is trying to delete a non existing product`
       );
+      return next(createError(404));
+    }
+    // validate the document (product) to be property of user
+    if (product.owner.toString() !== userId) {
+      console.log(
+        `WARNING! user${userId} is trying to delete a product not belonging to him`
+      );
+      return next(createError(401));
+    }
+
+    // remove image file if the products has it and is
+    if (product.image) {
+      try {
+        await unlink(
+          path.join(
+            import.meta.dirname,
+            "..",
+            "..",
+            "public",
+            "productImages",
+            product.image
+          )
+        );
+      } catch {}
     }
 
     await Product.deleteOne({ _id: productId });

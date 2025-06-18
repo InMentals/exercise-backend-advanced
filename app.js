@@ -53,7 +53,11 @@ app.put(
   jwtAuth.guard,
   apiProductsController.update
 );
-app.delete("/api/products/:productId", apiProductsController.deleteProduct);
+app.delete(
+  "/api/products/:productId",
+  jwtAuth.guard,
+  apiProductsController.deleteProduct
+);
 
 //  WebApplication routes
 app.use(cookieParser());
