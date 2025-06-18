@@ -9,6 +9,7 @@ import * as sessionManager from "./lib/sessionManager.js";
 import * as productsController from "./controllers/productsController.js";
 import * as localeController from "./controllers/localeController.js";
 import * as apiProductsController from "./controllers/api/apiProductsController.js";
+import * as apiLoginController from "./controllers/api/apiLoginController.js";
 import cookieParser from "cookie-parser";
 import swaggerMiddleware from "./lib/swaggerMiddleware.js";
 
@@ -33,6 +34,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(import.meta.dirname, "public")));
 
 // API routes
+app.post("/api/login", apiLoginController.loginJWT);
 app.get("/api/products", apiProductsController.list);
 app.get("/api/products/:productId", apiProductsController.getOne);
 app.post(
