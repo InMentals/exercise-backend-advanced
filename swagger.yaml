@@ -1,3 +1,5 @@
+#TODO if decided to use docu in the controllers in the blocks, delete this document
+
 openapi: 3.0.4
 info:
   title: Swagger Petstore - OpenAPI 3.0

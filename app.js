@@ -12,7 +12,7 @@ import * as apiProductsController from "./controllers/api/apiProductsController.
 import * as apiLoginController from "./controllers/api/apiLoginController.js";
 import cookieParser from "cookie-parser";
 import swaggerMiddleware from "./lib/swaggerMiddleware.js";
-
+import * as jwtAuth from "./lib/jwtAuthMiddleware.js";
 import upload from "./lib/uploadConfigure.js";
 import i18n from "./lib/i18nConfigure.js";
 
@@ -35,16 +35,22 @@ app.use(express.static(path.join(import.meta.dirname, "public")));
 
 // API routes
 app.post("/api/login", apiLoginController.loginJWT);
-app.get("/api/products", apiProductsController.list);
-app.get("/api/products/:productId", apiProductsController.getOne);
+app.get("/api/products", jwtAuth.guard, apiProductsController.list);
+app.get(
+  "/api/products/:productId",
+  jwtAuth.guard,
+  apiProductsController.getOne
+);
 app.post(
   "/api/products",
   upload.single("image"),
+  jwtAuth.guard,
   apiProductsController.newProduct
 );
 app.put(
   "/api/products/:productId",
   upload.single("image"),
+  jwtAuth.guard,
   apiProductsController.update
 );
 app.delete("/api/products/:productId", apiProductsController.deleteProduct);
