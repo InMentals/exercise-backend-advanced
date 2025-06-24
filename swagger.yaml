@@ -1,56 +1,53 @@
 openapi: 3.0.4
 info:
-  title: Swagger NodePop - OpenAPI 3.0
+  title: NodePop API
   description: |-
-    This is a Wallapop Server version based on the OpenAPI 3.0 specification.  You can find out more about
-    Swagger at [https://swagger.io](https://swagger.io). 
+    Wallapop version API with Node.js
 servers:
-  - url: http://localhost:3000/api-doc/
-
-tags:
-  - name: Login
-    description: Login to show and edit products
-  - name: Products
-    description: Show, create and edit products
-
-paths:
-  /api/login:
-    post:
-      tags: 
-        - Login
-      description: Login with email and password
-      operationId: login
-      requestBody:
-        description: Login
-        content: 
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/User'
-      responses:
-        '200':
-          description: Login successful
-        '401':
-          description: Unauthorized
-
-  /api/products:
-    get:
-      tags: 
-        - Products
-      description: Show products belonging to the logged user
-      operationId: showProducts
-      Authorization: Bearer <token>
-      security:
-        -bearerAuth:  []
-      responses: 
-      '401':
-        description: Access token is missing or invalid
-
-
+  - url: http://localhost:3000
 
 components:
+  securitySchemes:
+    JWT:
+      type: apiKey
+      in: header
+      name: Authorization
   schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        image:
+          type: string
+        owner:
+          type: string
+    NewProduct:
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: number
+        tags:
+          type: array
+          items:
+            type: string
+            enum: [work, lifestyle, motor, mobile]
+    tags:
+      type: array
+      items:
+        type: string
+        enum: [work, lifestyle, motor, mobile]
     User:
       type: object
+      required:
+        - email
+        - password
       properties:
         email:
           type: string
@@ -58,23 +55,324 @@ components:
         password:
           type: string
           example: 1234
-    Product:
-      type: object
-      properties:
-        name:
-          type: string
-          example: Red Car
-        price:
-          type: number
-          example: 25000
-        image:
-          type: image
-        tags:
-          type: Tags
-    Tags:
-      type: string []
-  securitySchemes:
-    bearerAuth: 
-        type: http
-        scheme: bearer
-        bearerFormat: JWT
+
+tags:
+  - name: Login
+    description: Login to show and edit products
+  - name: Products
+    description: List, create and edit products
+
+paths:
+  /api/login:
+    post:
+      tags:
+        - Login
+      summary: Login with email and password
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: JWT token generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tokenJWT:
+                    type: string
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "500":
+          description: Connection error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  /api/products:
+    get:
+      tags:
+        - Products
+      summary: List products belonging to logged user
+      security:
+        - JWT: []
+      parameters:
+        - in: query
+          name: name
+          description: Filter resulst by name
+          schema:
+            type: string
+        - in: query
+          name: limit
+          description: For pagination
+          schema:
+            type: integer
+        - in: query
+          name: skip
+          description: For pagination
+          schema:
+            type: integer
+        - in: query
+          name: sort
+          description: Sort results by field
+          schema:
+            type: string
+        - in: query
+          name: fields
+          description: Select the fields to show
+          schema:
+            type: string
+        - in: query
+          name: count
+          description: For pagination
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Product list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Product"
+                  count:
+                    type: integer
+        "401":
+          description: Access token is missing or invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "500":
+          description: Connection error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+    post:
+      tags:
+        - Products
+      summary: Create new product
+      security:
+        - JWT: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/NewProduct"
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: Optional product image file (JPG, PNG, etc.)
+                tags:
+                  type: array
+                  items:
+                    type: string
+                    enum: [work, lifestyle, motor, mobile]
+      responses:
+        "201":
+          description: New product created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    $ref: "#/components/schemas/Product"
+        "401":
+          description: Access token is missing or invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  /api/products/{productId}:
+    get:
+      tags:
+        - Products
+      summary: Get a product belonging to the logged user by ID
+      security:
+        - JWT: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Product found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    $ref: "#/components/schemas/Product"
+        "401":
+          description: Access token is missing or invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "404":
+          description: Product does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "500":
+          description: Connection error or wrong product id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+    put:
+      tags:
+        - Products
+      security:
+        - JWT: []
+      summary: Update an existing product belonging to the logged user
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/NewProduct"
+              properties:
+                image:
+                  type: string
+                  format: binary
+                tags:
+                  type: array
+                  items:
+                    type: string
+                    enum: [work, lifestyle, motor, mobile]
+      responses:
+        "200":
+          description: Product updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    $ref: "#/components/schemas/Product"
+        "401":
+          description: Access token is missing or invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "404":
+          description: Product does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "500":
+          description: Connection error or wrong product id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+    delete:
+      tags:
+        - Products
+      security:
+        - JWT: []
+      summary: Delete a product belonging to the logged user
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Product deleted successfully
+        "404":
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "401":
+          description: Access token is missing or invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "500":
+          description: Connection error or wrong product id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string

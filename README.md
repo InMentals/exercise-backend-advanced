@@ -35,33 +35,4 @@ npm run dev
 
 Base URL: http://localhost:3000/api
 
-### Product list
-
-GET /api/products
-
-```json
-{
-  "results": [
-    {
-      "_id": "67ebfc3328328dd1142b53dd",
-      "name": "Bosch drill machine",
-      "owner": "67ebfc3328328dd1142b53d6",
-      "price": 150,
-      "image": "https://m.media-amazon.com/images/I/61T3Nj83OuL.jpg",
-      "tags": ["work"],
-      "__v": 0
-    },
-    {
-      "_id": "684a20b5339153e7ca591e7b",
-      "name": "xxx",
-      "owner": "67ebfc3328328dd1142b53d6",
-      "price": 900,
-      "image": "1749688501769-cometa-kite-fone-bandite-xv-1640251374.jpeg",
-      "tags": ["lifestyle"],
-      "__v": 0
-    }
-  ]
-}
-```
-
-TODO add more endpoints
+Swagger documentation: http://localhost:3000/api-doc/
