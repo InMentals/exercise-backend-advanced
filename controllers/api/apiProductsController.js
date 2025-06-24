@@ -10,7 +10,7 @@ export async function list(req, res, next) {
     //Filters
     //http://localhost:3000/api/products?name=...
     const filterName = req.query.name;
-    //TODO implement price filter
+    //TODO implement price & tags filter
 
     //Pagination
     //http://localhost:3000/api/products?limit=2&skip=2
@@ -52,6 +52,9 @@ export async function getOne(req, res, next) {
     const productId = req.params.productId;
     const userId = req.apiUserId;
     const product = await Product.findOne({ _id: productId, owner: userId });
+    if (!product) {
+      return next(createError(404));
+    }
     res.json({ result: product });
   } catch (error) {
     next(error);
@@ -62,6 +65,7 @@ export async function newProduct(req, res, next) {
   try {
     const productData = req.body;
     const userId = req.apiUserId;
+    //TODO product data validation
 
     // create product in memory
     const product = new Product(productData);
@@ -88,6 +92,9 @@ export async function update(req, res, next) {
       productData,
       { new: true } // returns the updated document
     );
+    if (!updatedProduct) {
+      return next(createError(404));
+    }
     res.json({ result: updatedProduct });
   } catch (error) {
     next(error);
