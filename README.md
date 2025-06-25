@@ -30,3 +30,9 @@ Running Nodepop on localhost:3000:
 ```sh
 npm run dev
 ```
+
+## API
+
+Base URL: http://localhost:3000/api
+
+Swagger documentation: http://localhost:3000/api-doc/
