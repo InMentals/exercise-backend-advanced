@@ -10,7 +10,13 @@ export async function list(req, res, next) {
     //Filters
     //http://localhost:3000/api/products?name=...
     const filterName = req.query.name;
-    //TODO implement price & tags filter
+
+    //http://localhost:3000/api/products?min=0&max=1000...
+    const min = req.query.min;
+    const max = req.query.max;
+
+    //http://localhost:3000/api/products?tags=motor&tags[]=work...
+    const tags = [].concat(req.query.tags || []);
 
     //Pagination
     //http://localhost:3000/api/products?limit=2&skip=2
@@ -35,7 +41,16 @@ export async function list(req, res, next) {
       filter.name = filterName;
     }
 
-    const products = await Product.list(filter, limit, skip, sort, fields);
+    const products = await Product.list(
+      filter,
+      min,
+      max,
+      tags,
+      limit,
+      skip,
+      sort,
+      fields
+    );
     const result = { results: products };
     if (withCount) {
       const count = await Product.countDocuments(filter);

@@ -8,8 +8,21 @@ var productSchema = new mongoose.Schema({
   tags: [String],
 });
 
-productSchema.statics.list = function (filter, limit, skip, sort, fields) {
-  const query = Product.find(filter);
+productSchema.statics.list = function (
+  filterName,
+  min,
+  max,
+  filterTags,
+  limit,
+  skip,
+  sort,
+  fields
+) {
+  let query = Product.find(filterName);
+  if (min) query = query.where("price").gt(min);
+  if (max) query = query.where("price").lt(max);
+  if (filterTags.length) query = query.where("tags").all(filterTags);
+
   query.limit(limit);
   query.skip(skip);
   query.sort(sort);
