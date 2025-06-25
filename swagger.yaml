@@ -61,7 +61,7 @@ tags:
   - name: Login
     description: Login to show and edit products
   - name: Products
-    description: List, create and edit products
+    description: List, create, edit and delete products
 
 paths:
   /api/login:
@@ -114,9 +114,28 @@ paths:
       parameters:
         - in: query
           name: name
-          description: Filter resulst by name
+          description: Filter results by name
           schema:
             type: string
+        - in: query
+          name: min
+          description: Filter results by min price
+          schema:
+            type: string
+        - in: query
+          name: max
+          description: Filter results by min price
+          schema:
+            type: string
+        - in: query
+          name: tags
+          description: Filter results by tags
+          schema:
+            $ref: "#/components/schemas/tags"
+
+
+
+
         - in: query
           name: limit
           description: For pagination
