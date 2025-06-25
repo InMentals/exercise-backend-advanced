@@ -1,4 +1,6 @@
 import Product from "../models/Product.js";
+import { unlink } from "node:fs/promises";
+import path from "node:path";
 
 export function index(req, res, next) {
   res.render("new-product");
@@ -31,8 +33,20 @@ export async function deleteProduct(req, res, next) {
   try {
     const userId = req.session.userId;
     const productId = req.params.productId;
+    const product = await Product.findById(productId);
 
     await Product.deleteOne({ _id: productId, owner: userId });
+    if (product.image) {
+      await unlink(
+        path.join(
+          import.meta.dirname,
+          "..",
+          "public",
+          "productImages",
+          product.image
+        )
+      );
+    }
 
     res.redirect("/");
   } catch (error) {
