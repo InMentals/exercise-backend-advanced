@@ -405,6 +405,6 @@ FodyWeavers.xsd
 *.sln.iml
 
 # Images
-/public/productImages/*
+#/public/productImages/*
 
 # env configuration
