@@ -139,18 +139,17 @@ export async function deleteProduct(req, res, next) {
 
     // remove image file if the products has it and is
     if (product.image) {
+      const imagePath = path.join(
+        import.meta.dirname,
+        "..",
+        "..",
+        "public",
+        "productImages",
+        product.image
+      );
       try {
-        await unlink(
-          path.join(
-            import.meta.dirname,
-            "..",
-            "..",
-            "public",
-            "productImages",
-            product.image
-          )
-        );
-      } catch {}
+        await unlink(imagePath);
+      } catch (error) {}
     }
 
     await Product.deleteOne({ _id: productId });

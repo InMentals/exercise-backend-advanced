@@ -37,15 +37,17 @@ export async function deleteProduct(req, res, next) {
 
     await Product.deleteOne({ _id: productId, owner: userId });
     if (product.image) {
-      await unlink(
-        path.join(
-          import.meta.dirname,
-          "..",
-          "public",
-          "productImages",
-          product.image
-        )
+      const imagePath = path.join(
+        import.meta.dirname,
+        "..",
+        "..",
+        "public",
+        "productImages",
+        product.image
       );
+      try {
+        await unlink(imagePath);
+      } catch (error) {}
     }
 
     res.redirect("/");
