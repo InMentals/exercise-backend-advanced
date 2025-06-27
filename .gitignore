@@ -404,7 +404,8 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
-# Images
-#/public/productImages/*
+# Images but not .gitkeep
+/public/productImages/*
+!/public/productImages/.gitkeep
 
 # env configuration
